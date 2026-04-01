@@ -12,10 +12,16 @@ runs:
     - shell: powershell
       run: echo "get app"
 
+    - shell: powershell
+      run: |
+        if (Test-Path "${{ runner.temp }}\python-greetings-${{ inputs.env_name }}") {
+          Remove-Item -Recurse -Force "${{ runner.temp }}\python-greetings-${{ inputs.env_name }}"
+        }
+
     - uses: actions/download-artifact@v4
       with:
         name: python-greetings-app
-        path: python-greetings
+        path: ${{ runner.temp }}\python-greetings-${{ inputs.env_name }}
 
     - shell: powershell
       run: echo "deploy ${{ inputs.env_name }}"
@@ -25,7 +31,10 @@ runs:
       run: pm2 delete greetings-app-${{ inputs.env_name }}
 
     - shell: powershell
-      working-directory: python-greetings
+      working-directory: ${{ runner.temp }}\python-greetings-${{ inputs.env_name }}
       run: |
         $env:PORT = "${{ inputs.port }}"
         pm2 start app.py --name greetings-app-${{ inputs.env_name }} --interpreter venv\Scripts\python.exe
+
+    - shell: powershell
+      run: pm2 list
