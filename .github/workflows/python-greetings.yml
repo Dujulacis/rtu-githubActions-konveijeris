@@ -7,10 +7,9 @@ jobs:
   install-pip-deps:
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: echo "install deps"
         shell: powershell
-
       - uses: ./.github/actions/install-pip-deps
         with:
           app_path: python-greetings
@@ -19,22 +18,21 @@ jobs:
     runs-on: self-hosted
     needs: install-pip-deps
     steps:
+      - uses: actions/checkout@v6
       - run: echo "deploy dev"
         shell: powershell
-
       - uses: ./.github/actions/deploy-app
         with:
           env_name: dev
           port: "7001"
-          app_path: python-greetings
 
   tests-on-dev:
     runs-on: self-hosted
     needs: deploy-to-dev
     steps:
+      - uses: actions/checkout@v6
       - run: echo "test dev"
         shell: powershell
-
       - uses: ./.github/actions/run-tests
         with:
           env_name: dev
@@ -44,22 +42,21 @@ jobs:
     runs-on: self-hosted
     needs: tests-on-dev
     steps:
+      - uses: actions/checkout@v6
       - run: echo "deploy stg"
         shell: powershell
-
       - uses: ./.github/actions/deploy-app
         with:
           env_name: stg
           port: "7002"
-          app_path: python-greetings
 
   tests-on-stg:
     runs-on: self-hosted
     needs: deploy-to-stg
     steps:
+      - uses: actions/checkout@v6
       - run: echo "test stg"
         shell: powershell
-
       - uses: ./.github/actions/run-tests
         with:
           env_name: stg
@@ -69,22 +66,21 @@ jobs:
     runs-on: self-hosted
     needs: tests-on-stg
     steps:
+      - uses: actions/checkout@v6
       - run: echo "deploy preprod"
         shell: powershell
-
       - uses: ./.github/actions/deploy-app
         with:
           env_name: preprod
           port: "7003"
-          app_path: python-greetings
 
   tests-on-preprod:
     runs-on: self-hosted
     needs: deploy-to-preprod
     steps:
+      - uses: actions/checkout@v6
       - run: echo "test preprod"
         shell: powershell
-
       - uses: ./.github/actions/run-tests
         with:
           env_name: preprod
@@ -94,22 +90,21 @@ jobs:
     runs-on: self-hosted
     needs: tests-on-preprod
     steps:
+      - uses: actions/checkout@v6
       - run: echo "deploy prod"
         shell: powershell
-
       - uses: ./.github/actions/deploy-app
         with:
           env_name: prod
           port: "7004"
-          app_path: python-greetings
 
   tests-on-prod:
     runs-on: self-hosted
     needs: deploy-to-prod
     steps:
+      - uses: actions/checkout@v6
       - run: echo "test prod"
         shell: powershell
-
       - uses: ./.github/actions/run-tests
         with:
           env_name: prod
